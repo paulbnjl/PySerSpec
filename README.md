@@ -11,8 +11,11 @@ Documentation is available here :
 https://extranet.fisher.co.uk/webfiles/fr/Pjointes/Mdemploi/SHI001_FR%20SPECTROPHOTOMETRE%201240.pdf (in French ; p96-p109)
 
 In order to use it, it is required to have installed :
+
   x At least python 3.4 : https://www.python.org/downloads/
+  
   x Pyserial : https://pythonhosted.org/pyserial/
+  
   x Matplotlib : http://matplotlib.org/
   
   To use it, assuming that you installed all the required dependencies, you just have to run the PySerSpec.py file.
