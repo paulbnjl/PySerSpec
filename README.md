@@ -30,6 +30,6 @@ The "Raw" csv file is made of the unedited values (i.e the ones actually sent by
 
 Note : this can be adapted to other shimadzu devices as well. According to the Shimadzu UV-1800 manual :
 
-Sending and receiving protocols are the same, the differences being in the definition of some command lines :
-
 http://www.sustainable-desalination.net/wp-content/uploads/2013/05/UV-1800.pdf
+
+Sending and receiving protocols are the same, the differences being in the definition of some command lines.
