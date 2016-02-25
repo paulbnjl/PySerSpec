@@ -20,12 +20,12 @@
 
 class MesMode:
 	def __init__(self):
-		""" Default settings : absorbance=1 """
+		
 		self.MODE_VAL = '1'
 		
 	def get_MODE_VAL(self):			
 			available_choices_mes_mode = ["1 : Absorbance (Abs) [default]", "2 : Transmittance (T%)", "3 : Energy", "4 : Exit"]
-			mes_mode_real_values = ["1", "2", "3", "4"]
+			mes_mode_real_values = ["1", "2", "3"]
 			print("Select measurement mode : \n")
 				
 			for i in range(4):
@@ -33,11 +33,12 @@ class MesMode:
 			mes_mode_choice_val = ''
 			while mes_mode_choice_val not in mes_mode_real_values:
 				mes_mode_choice_val = input()
-			if mes_mode_choice_val in ['1','2','3']:
+			if mes_mode_choice_val in ['1','2', '3']:
 				self.MODE_VAL = mes_mode_choice_val
 				returnchoice = int(mes_mode_choice_val) - int(1)
 				print("Measurement mode set to : " + available_choices_mes_mode[int(returnchoice)])
 				return self.MODE_VAL
+				
 			elif mes_mode_choice_val == '4':
 				print("Closing now. Goodbye !")
 				end_menu_mode = '1'

@@ -21,7 +21,7 @@
 
 class SpectrumScan():
 	def __init__(self):
-		""" Default settings : read from 190 nm to 1100 nm """
+
 		self.SP_MAX_VAL = 11000 # default max value
 		self.SP_MIN_VAL = 1900 # default min value
 		self.SPEED_VAL = 1 # default wavelength scan speed

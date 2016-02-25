@@ -20,7 +20,7 @@
 
 
 ### Libraries ##############################################################
-from sig_list import ENQ_SIGNAL, ACK_SIGNAL
+from sig_list import ENQ_SIGNAL, ACK_SIGNAL, ESC_SIGNAL, EOT_SIGNAL
 from ASC_nozzle import AscPosition
 from cuvette_position_check import CuvettePosition
 from connect import ConnectPort
@@ -37,43 +37,80 @@ class DataReception(ConnectPort, AscPosition, CuvettePosition, DataProcessing):
 		self.DATA_output = []
 	
 	def rec_data(self, SIGNAL):
-		print("Interrogating machine...")
+		self.port.write(ESC_SIGNAL.encode('ascii'))
+		
+		print("Interrogating machine (ENQ)...")
 		self.port.write(ENQ_SIGNAL.encode('ascii'))
+		
 		ENQ_receive_response = b''
 		while ENQ_receive_response == b'':
 			ENQ_receive_response = self.port.read(1)
+		
 		if ENQ_receive_response == b'\x06':		
-			print("Machine acknowledged !")
+			print("Machine acknowledged (ACK) !")
 			self.port.write(SIGNAL.encode('ascii'))
 			print("Sending request : \n " + SIGNAL)
+			
 			DATA_request_response = b''
 			while DATA_request_response == b'':
 				DATA_request_response = self.port.read(1)
+				
 				if DATA_request_response in [b'\x06\x05', b'\x06']:
-					print("Request accepted. Processing...")
+					print("Request accepted (ACK). Processing...")
+					
 					machine_ENQ = ''
 					while machine_ENQ != b'\x05':
 						machine_ENQ = self.port.read(1)
+						
 						if machine_ENQ == b'\x1b':
 							print("ERROR. Machine sent an ESC signal. Closing now.")
 							exit()
 							break
+							
+						else:
+							pass
+							
 					if machine_ENQ == b'\x05':
 						self.port.write(ACK_SIGNAL.encode('ascii'))
+						
 						line_output = ''
 						while line_output != b'\x04':
 							line_output=self.port.readline()
 							self.port.write(ACK_SIGNAL.encode('ascii'))
+							
 							if line_output != b'\x04':
 								self.DATA_output.append(line_output)
+							
+							else:
+								pass
+							
 						self.port.write(ACK_SIGNAL.encode('ascii'))
-						self.port.close()
+						self.port.write(ESC_SIGNAL.encode('ascii'))
+						
 					else:
 						print("ERROR. Message returned : " + machine_ENQ)
-				else:
-					print("ERROR. No ENQ from the machine.")
+						self.port.write(ESC_SIGNAL.encode('ascii'))
+						self.port.write(EOT_SIGNAL.encode('ascii'))
+						exit()
+						break
+				
+				elif DATA_request_response == b'\x15':
+					print("ERROR. Machine refused the command (NAK).")
+					self.port.write(ESC_SIGNAL.encode('ascii'))
+					self.port.write(EOT_SIGNAL.encode('ascii'))
 					exit()
+					break
+					
+				else:
+					print("ERROR. No return (ENQ) from the machine.")
+					self.port.write(ESC_SIGNAL.encode('ascii'))
+					self.port.write(EOT_SIGNAL.encode('ascii'))
+					exit()
+					break
 		else:
-			print ("ERROR. Enquiry request refused !")
+			print ("ERROR. Enquiry (ENQ) request refused !")
+			self.port.write(ESC_SIGNAL.encode('ascii'))
+			self.port.write(EOT_SIGNAL.encode('ascii'))
 			exit()
+			
 		return self.DATA_output

@@ -20,7 +20,7 @@
 
 class BaseCorr:
 	def __init__(self):
-		""" Default settings : read from 190 nm to 1100 nm """
+		
 		self.BASE_CORR_MAX_VAL = 11000 # default max value
 		self.BASE_CORR_MIN_VAL = 1900 # default min value
 		self.DIFF_VAL_BASECORR = 910 # default measured range (n-m)

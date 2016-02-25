@@ -20,7 +20,7 @@
 
 class DataAccSp:
 	def __init__(self):
-		""" Default settings : dat_acc=1 """
+		
 		self.DATA_ACC_VAL = 2
 		
 	def get_DATA_ACC_VAL(self):			
@@ -32,13 +32,17 @@ class DataAccSp:
 			data_acc_choice_val = ''
 			while data_acc_choice_val not in real_choices_data_acc:
 				data_acc_choice_val = input()
+				
 				if data_acc_choice_val in ['1','2','3']:
 					self.DATA_ACC_VAL = data_acc_choice_val
-					print("Accumulation time set to " + available_choices_data_acc[int(data_acc_choice_val)])
+					returnchoice = int(data_acc_choice_val) - int(1)
+					print("Accumulation time set to " + available_choices_data_acc[int(returnchoice)])
 					print("Please note that you will have to correct the baseline again after this.")
+					return self.DATA_ACC_VAL
+				
 				elif data_acc_choice_val == '4':
 					print("Closing now. Goodbye !")
-					end_menu_dac = '1'
+					end_menu_dat = '1'
 					exit()
 				else:
 					pass

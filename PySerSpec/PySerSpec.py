@@ -53,7 +53,7 @@ while True:
 
 
 ##### DEFAULT VARIABLES ####################################################
-wv_set = '550' # seems that 550 is the default for the D2 lamp
+wv_set = 5500 # seems that 550 is the default for the D2 lamp
 data_acc_time_set = '2' # 0.1 seconds by default ?
 mode_set = '1' # absorbance
 light_set = '2' # D2 lamp
@@ -67,7 +67,7 @@ while end_menu_princ != 1:
 	for i in range(9):
 		print(menu_choices[int(i)])
 		
-	real_menu_choices = ['1','2','3','4','5','6','7','8','9','10']
+	real_menu_choices = ['1','2','3','4','5','6','7','8','9']
 	user_choice = ''
 	while user_choice not in real_menu_choices:
 		user_choice = input()
@@ -80,15 +80,16 @@ while end_menu_princ != 1:
 			MODE.get_MODE_VAL()
 			mode_set = MODE.MODE_VAL
 
-			MODE.MEASUREMENTSMODE_SIGNAL = ' '.join(['\x76', str(mode_set), '\x00'])
-
+			MODE.MEASUREMENTSMODE_SIGNAL1 = '\x76'
+			MODE.MEASUREMENTSMODE_SIGNAL2 = str(mode_set)
+			MODE.MEASUREMENTSMODE_SIGNAL3 = '\x00'
+			
 			MODE.port.port = str(PORT_SET)
 			MODE.open_port()
-			MODE.send_port(MODE.MEASUREMENTSMODE_SIGNAL)
+			MODE.send_special(MODE.MEASUREMENTSMODE_SIGNAL1, MODE.MEASUREMENTSMODE_SIGNAL2, MODE.MEASUREMENTSMODE_SIGNAL3)
 			MODE.close_port()
-			print("Going back to main menu ...")
+			print("Parameter set. Going back to main menu ...")
 			break
-
 	elif user_choice == '2':
 		print ("################ LIGHT SOURCE ############################################")
 		end_menu_light = ''
@@ -96,13 +97,16 @@ while end_menu_princ != 1:
 			LIGHT = SendData()
 			LIGHT.get_LIGHT_VAL()
 			light_set = LIGHT.LIGHT_VAL
-
-			LIGHT.LIGHTSOURCETYPE_SIGNAL = ' '.join(['\x6c', str(light_set), '\x00'])
+			
+			LIGHT.LIGHTSOURCETYPE_SIGNAL1 = '\x6c'
+			LIGHT.LIGHTSOURCETYPE_SIGNAL2 = str(light_set)
+			LIGHT.LIGHTSOURCETYPE_SIGNAL3 = '\x00'
+			
 			LIGHT.port.port = PORT_SET
 			LIGHT.open_port()
-			LIGHT.send_port(LIGHT.LIGHTSOURCETYPE_SIGNAL)
+			LIGHT.send_special(LIGHT.LIGHTSOURCETYPE_SIGNAL1, LIGHT.LIGHTSOURCETYPE_SIGNAL2, LIGHT.LIGHTSOURCETYPE_SIGNAL3)
 			LIGHT.close_port()
-			print("Going back to main menu ...")
+			print("Parameter set. Going back to main menu ...")
 			break
 
 	elif user_choice == '3':
@@ -113,12 +117,16 @@ while end_menu_princ != 1:
 			GAIN.get_GAIN_VAL()
 			gain_set = GAIN.GAIN_VAL
 
-			GAIN.GAINSET_SIGNAL = ' '.join(['\x67', str(gain_set), '\x00'])
+			GAIN.GAINSET_SIGNAL1 = '\x67'
+			GAIN.GAINSET_SIGNAL2 = str(gain_set)
+			GAIN.GAINSET_SIGNAL3 = '\x00'
+
+
 			GAIN.port.port = PORT_SET
 			GAIN.open_port()
-			GAIN.send_port(GAIN.GAINSET_SIGNAL)
+			GAIN.send_special(GAIN.GAINSET_SIGNAL1, GAIN.GAINSET_SIGNAL2, GAIN.GAINSET_SIGNAL3)
 			GAIN.close_port()
-			print("Going back to main menu ...")
+			print("Parameter set. Going back to main menu ...")
 			break
 			
 	elif user_choice == '4':
@@ -134,8 +142,8 @@ while end_menu_princ != 1:
 			DATA_ACC_TIME.open_port()
 			DATA_ACC_TIME.send_port(DATA_ACC_TIME.DATA_ACC_TIME_SIGNAL)
 			DATA_ACC_TIME.close_port()
-			print("Going back to main menu ...")
-			break	
+			print("Parameter set. Going back to main menu ...")
+			break
 		
 ############# Now the funky part ! ####################################################
 		
@@ -183,30 +191,20 @@ while end_menu_princ != 1:
 				break
 				
 			elif mes_menu_user_choice == '3':
-				if wv_set == '':
-					TY_WV_SET = SendData()
-					TY_WV_SET.port.port = PORT_SET
-					TY_WV_SET.get_WV_VAL()
-					wv_set = WV_SET.WV_VAL
-					TY_WV_SET.WAVELENGTHVALUE_SIGNAL = ' '.join(['\x77', str(wv_set), '\x00'])
-					TY_WV_SET.open_port()
-					TY_WV_SET.send_port(TY_WV_SET.WAVELENGTHVALUE_SIGNAL)
-					TY_WV_SET.close_port()
-				else:
-					pass
+				TY_WV_SET = SendData()
+				TY_WV_SET.port.port = PORT_SET
+				TY_WV_SET.get_WV_VAL()
+				wv_set = TY_WV_SET.WV_VAL
+				TY_WV_SET.WAVELENGTHVALUE_SIGNAL = ' '.join(['\x77', str(wv_set), '\x00'])
+				TY_WV_SET.open_port()
+				TY_WV_SET.send_port(TY_WV_SET.WAVELENGTHVALUE_SIGNAL)
+				TY_WV_SET.close_port()
 					
+				print("Note : in non-spectral mode, lamp choice is ruled by the spectrophotometer.")
 				print('Please make sure that the blank was set first.')
 				print('Insert the sample and press enter.')
 				input()
 				
-				TY = SendData()
-				TY.port.port = PORT_SET
-				TY.get_WV_VAL()
-				wv_set = TY.WV_VAL
-				TY.WAVELENGTHVALUE_SIGNAL = ' '.join(['\x77', str(wv_set), '\x00'])
-				TY.open_port()	
-				TY.send_port(TY.WAVELENGTHVALUE_SIGNAL)
-				TY.close_port()
 				
 				DATA_MONO = DataReception()
 				DATA_MONO.SIGNAL = '\x64\x00'
@@ -217,19 +215,27 @@ while end_menu_princ != 1:
 
 				
 				DATA_MONO.data_value(DATA_MONO.DATA_output)
-				print("Measured absorbance at " + str(wv_set/10) + " nm : " + str(DATA_MONO.ABS_corr))
 				
 				if mode_set == '1':
+					print("Absorbance at " + str(wv_set/10) + " nm : " + str(DATA_MONO.ABS_corr))
+
 					print("Saving data...")
 					DATA_MONO.data_save_csv_mono('RAW data','Wavelength (nm)', 'Absorbance', wv_set, DATA_MONO.ABS_raw, gain_set, light_set, mode_set)
 					DATA_MONO.data_save_csv_mono('Corrected data','Wavelength (nm)', 'Absorbance', wv_set, DATA_MONO.ABS_corr, gain_set, light_set, mode_set)
 					print("Data saved.")
+					
 				elif mode_set == '2':
+					#DATA_MONO.data_conv_transm_mono(DATA_MONO.ABS_raw)
+					
+					print("Transmittance at " + str(wv_set/10) + " nm : " + str(DATA_MONO.ABS_corr))
+					
 					print("Saving data...")
 					DATA_MONO.data_save_csv_mono('RAW data','Wavelength (nm)', 'Transmittance', wv_set, DATA_MONO.ABS_raw, gain_set, light_set, mode_set)
 					DATA_MONO.data_save_csv_mono('Corrected data','Wavelength (nm)', 'Transmissance', wv_set, DATA_MONO.ABS_corr, gain_set, light_set, mode_set)
 					print("Data saved.")
+					
 				elif mode_set == '3':
+					print("Energy at " + str(wv_set/10) + " nm : " + str(DATA_MONO.ABS_corr))
 					print("Saving data...")
 					DATA_MONO.data_save_csv_mono('RAW data','Wavelength (nm)', 'Energy', wv_set, DATA_MONO.ABS_raw, gain_set, light_set, mode_set)
 					DATA_MONO.data_save_csv_mono('Corrected data','Wavelength (nm)', 'Energy', wv_set, DATA_MONO.ABS_corr, gain_set, light_set, mode_set)
@@ -276,13 +282,12 @@ while end_menu_princ != 1:
 					BASELINE_CORR.close_port()
 					
 			elif spectrum_menu_user_choice == '2':
-				print('Insert the sample and press enter.')
 				input()
 				SPECTRUM = SendData()
 				SPECTRUM.get_SP_MAX_VAL()
 				SPECTRUM.get_SP_MIN_VAL()
 				SPECTRUM.get_DIFF_VAL()
-				while SPECTRUM.test_MAX_MINUS_MIN() != 1:
+				while SPECTRUM.test_MAX_MINUS_MIN() != '1':
 					print("Difference between MIN and MAX values should be at least 100. Please enter another set of values.")
 					SPECTRUM.get_SP_MAX_VAL()
 					SPECTRUM.get_SP_MIN_VAL()
@@ -421,15 +426,22 @@ while end_menu_princ != 1:
 		TIMESCAN_TZ.send_port(TIMESCAN_TZ.WAVELENGTHVALUE_SIGNAL)
 		TIMESCAN_TZ.close_port()
 		
-		print("Please insert the blank sample, and then press enter")
-		input()
-		TIMESCAN_BLANK_SET = SendData()
-		TIMESCAN_BLANK_SET.port.port = PORT_SET
-		TIMESCAN_BLANK_SET.RESET_SIGNAL = '\x78\x00'
-		TIMESCAN_BLANK_SET.open_port()
-		TIMESCAN_BLANK_SET.send_port(TIMESCAN_BLANK_SET.RESET_SIGNAL)
-		TIMESCAN_BLANK_SET.close_port()
-		
+		print("Set blank (Y/N)?")
+		blank_choice = ['Y', 'N']
+		blank_resp = ''
+		while blank_resp not in blank_choice:
+			blank_resp = input()
+		if blank_resp == 'Y':
+			print("Please insert the blank sample, and then press enter")
+			input()
+			TIMESCAN_BLANK_SET = SendData()
+			TIMESCAN_BLANK_SET.port.port = PORT_SET
+			TIMESCAN_BLANK_SET.RESET_SIGNAL = '\x78\x00'
+			TIMESCAN_BLANK_SET.open_port()
+			TIMESCAN_BLANK_SET.send_port(TIMESCAN_BLANK_SET.RESET_SIGNAL)
+			TIMESCAN_BLANK_SET.close_port()
+		else:
+			pass
 		
 		print("Please insert the sample to measure, and then press enter.")
 		input()
@@ -531,8 +543,8 @@ while end_menu_princ != 1:
 		elif time_unit_val == 0:
 			if mode_set == '1':
 				print("Saving data...")
-				TIMESCAN_REC.data_save_csv('RAW data','Time (seconds)', 'Absorbance', TIMESCAN_REC.TIME, TIMESCAN_REC.ABS_raw, gain_set, light_set, mode_set)
-				TIMESCAN_REC.data_save_csv('Corrected data','Time (seconds)', 'Absorbance', TIMESCAN_REC.TIME, TIMESCAN_REC.ABS_corr, gain_set, light_set, mode_set)
+				TIMESCAN_REC.data_save_csv('RAW data','Time (seconds)', 'Absorbance', TIMESCAN_REC.TIME*10, TIMESCAN_REC.ABS_raw, gain_set, light_set, mode_set)
+				TIMESCAN_REC.data_save_csv('Corrected data','Time (seconds)', 'Absorbance', TIMESCAN_REC.TIME*10, TIMESCAN_REC.ABS_corr, gain_set, light_set, mode_set)
 				print("Data saved.")
 				
 				plot_choice = ['Y', 'N']
@@ -555,8 +567,8 @@ while end_menu_princ != 1:
 					
 			elif mode_set == '2':
 				print("Saving data...")
-				TIMESCAN_REC.data_save_csv('RAW data','Time (seconds)', 'Transmittance', TIMESCAN_REC.TIME, TIMESCAN_REC.ABS_raw, gain_set, light_set, mode_set)
-				TIMESCAN_REC.data_save_csv('Corrected data','Time (seconds)', 'Transmissance', TIMESCAN_REC.TIME, TIMESCAN_REC.ABS_corr, gain_set, light_set, mode_set)
+				TIMESCAN_REC.data_save_csv('RAW data','Time (seconds)', 'Transmittance', TIMESCAN_REC.TIME*10, TIMESCAN_REC.ABS_raw, gain_set, light_set, mode_set)
+				TIMESCAN_REC.data_save_csv('Corrected data','Time (seconds)', 'Transmissance', TIMESCAN_REC.TIME*10, TIMESCAN_REC.ABS_corr, gain_set, light_set, mode_set)
 				print("Data saved.")
 				
 				plot_choice = ['Y', 'N']
@@ -579,8 +591,8 @@ while end_menu_princ != 1:
 					
 			elif mode_set == '3':
 				print("Saving data...")
-				TIMESCAN_REC.data_save_csv('RAW data','Time (seconds)', 'Energy', TIMESCAN_REC.TIME, TIMESCAN_REC.ABS_raw, gain_set, light_set, mode_set)
-				TIMESCAN_REC.data_save_csv('Corrected data','Time (seconds)', 'Energy', TIMESCAN_REC.TIME, TIMESCAN_REC.ABS_corr, gain_set, light_set, mode_set)					
+				TIMESCAN_REC.data_save_csv('RAW data','Time (seconds)', 'Energy', TIMESCAN_REC.TIME*10, TIMESCAN_REC.ABS_raw, gain_set, light_set, mode_set)
+				TIMESCAN_REC.data_save_csv('Corrected data','Time (seconds)', 'Energy', TIMESCAN_REC.TIME*10, TIMESCAN_REC.ABS_corr, gain_set, light_set, mode_set)					
 				print("Data saved.")
 				
 				plot_choice = ['Y', 'N']
@@ -597,7 +609,7 @@ while end_menu_princ != 1:
 				while plot_resp not in plot_choice:
 					plot_resp = input()
 				if plot_resp == 'Y':
-					TIMESCAN_REC.data_plot('Time (seconds)', 'Energy',TIMESCAN_REC.TIME, SPECTRUM2_REC.ABS_raw)
+					TIMESCAN_REC.data_plot('Time (seconds)', 'Energy',TIMESCAN_REC.TIME, TIMESCAN_REC.ABS_raw)
 				elif plot_resp == 'N':
 					pass
 		
@@ -779,23 +791,6 @@ while end_menu_princ != 1:
 		end_menu_princ = '1'
 		exit()		
 		
-		
-############################################################################
-############################################################################
-
-	elif user_choice == '10':
-	# Yes, it was mandatory. World needs beavers ! :)
-		print("""\
-												--- 				
-											 __|| ||__	
-								  			||__ X __||
-								 			   || ||
-												---
-			Lex naturalis non scribitur, sed profluit quodam naturali fonte in singulis exprimititur 
-			""")
-		end_menu_princ = '1'
-		exit()
-
 	else:
 		print("ERROR ! Program will stop now...")
 		end_menu_princ = '1'

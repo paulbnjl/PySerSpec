@@ -20,7 +20,7 @@
 
 class GainSp:
 	def __init__(self):
-		""" Default settings : gain=1 """
+		
 		self.GAIN_VAL = '3'
 			
 	def get_GAIN_VAL(self):			
@@ -35,6 +35,7 @@ class GainSp:
 					self.GAIN_VAL = gain_choice_val
 					print("Gain set to : " + available_choices_gain[int(gain_choice_val)-1])
 					return self.GAIN_VAL
+					
 				else:
 					print("Closing now. Goodbye !")
 					end_menu_gain = '1'

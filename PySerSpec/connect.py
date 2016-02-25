@@ -39,7 +39,7 @@ class ConnectPort():
 		self.port.timeout = 0.1
 		self.port.write_timeout = 0.1
 		self.port.rts = True # don't ask me why, it won't work without it
-		self.port.dtr = True # 
+		self.port.dtr = True
 		
 	def get_port(self):
 		available_port = ["1 : COM1", "2 : COM2", "3 : COM3", "4 : COM4", "5 : /dev/ttyS0 (GNU/Linux)", "6 : /dev/ttyUSB0 (GNU/Linux)", "7 : Other port (specify)", '8 : Exit']
@@ -93,6 +93,8 @@ class ConnectPort():
 	
 	def close_port(self):
 		if self.port.isOpen():
+			self.port.flushInput()
+			self.port.flushOutput()
 			self.port.close()
 			print("Port closed.")
 		else:

@@ -20,11 +20,11 @@
 
 class LightSource:
 	def __init__(self):
-		""" Default settings : D2 LAMP """
+		
 		self.LIGHT_VAL = 2
 		
 	def get_LIGHT_VAL(self):			
-			available_choices_LightSource = ["1 : Tungsten-Iode WI", "2 : Deuterium D2 [default]","3 : Optional lamp", "4 : Exit"]
+			available_choices_LightSource = ["1 : Tungsten-Iode WI (Vis-IR)", "2 : Deuterium D2 (UV)","3 : Optional lamp", "4 : Exit"]
 			LightSource_real_values = ["1","2","3","4"]
 			print("Select light source : \n")
 			for i in range(4):
@@ -34,8 +34,10 @@ class LightSource:
 				LightSource_choice_val = input()
 				if LightSource_choice_val in ['1','2', '3']:
 					self.LIGHT_VAL = LightSource_choice_val
-					print("Light source set to : " + available_choices_LightSource[int(LightSource_choice_val)])
+					returnchoice = int(LightSource_choice_val) - int(1)
+					print("Light source set to : " + available_choices_LightSource[int(returnchoice)])
 					return self.LIGHT_VAL
+					
 				elif LightSource_choice_val == '4':
 					print("Closing now. Goodbye !")
 					end_menu_light = '1'

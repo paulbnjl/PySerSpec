@@ -23,6 +23,8 @@ import matplotlib.pyplot as plot
 import csv
 import os
 import datetime
+# import math
+# from decimal import Decimal
 
 class DataProcessing:
 	def __init__(self):
@@ -118,6 +120,7 @@ class DataProcessing:
 
 			TIME_nested = [s.split('  ', 2)[:2] for s in self.PROCESS_DATA]
 			self.TIME = [val for sublist in TIME_nested for val in sublist if val != ""]
+			self.TIME = [int(float(x))*10 for x in self.TIME]
 			ABS_nested = [s.split('  ', 2)[2:] for s in self.PROCESS_DATA]
 			self.ABS_raw = [val for sublist in ABS_nested for val in sublist if val != ""]
 			self.ABS_corr = [val for val in self.ABS_raw]
@@ -167,14 +170,14 @@ class DataProcessing:
 		for val in self.PROCESS_DATA:
 			self.PROCESS_DATA[count] = val.replace("d",'')
 			count += 1		
-		self.ABS_raw = str(self.PROCESS_DATA[0])
-		ABS_corr_prec = [val for val in self.PROCESS_DATA if val != ""]
-		self.ABS_corr = str(self.ABS_corr_prec[0])
-		for i in range(len(self.ABS_corr)):
-			if '-' in self.ABS_corr[i]:
-				self.ABS_corr[i] = '0'
+		self.ABS_raw = self.PROCESS_DATA[0]
+		self.ABS_corr = self.ABS_raw
+		for val in range(len(self.ABS_corr)):
+			if '-' in self.ABS_corr:
+				self.ABS_corr = '0'
 			else:
-				pass	
+				pass
+				
 		return self.ABS_corr, self.ABS_raw	
 		
 	def data_plot(self, title_x_axis, title_y_axis,val_ax, val_or):
@@ -213,7 +216,7 @@ class DataProcessing:
 			light = 'Custom lamp'
 		else:
 			pass
-		print("Please type an identifier : ")
+		print("Please type an identifier (fist for corrected data csv, then raw data csv) : ")
 		sample_id = input()
 		filename = datetime.datetime.now().strftime("%d_%m_%Y-%H_%M_%S")
 		data_file = open(sample_id + '_' +name + '_' + filename + '.csv', 'w', newline='')
@@ -254,14 +257,14 @@ class DataProcessing:
 			else:
 				pass
 				
-			print("Please type an identifier : ")
+			print("Please type an identifier (first for corrected data csv, then raw data csv) : ")
 			sample_id_mono = input()
 			filename = datetime.datetime.now().strftime("%d_%m_%Y-%H_%M_%S")
 			data_file = open(sample_id_mono + '_' + name + '_' + filename + '.csv', 'w', newline='')
 			writer = csv.writer(data_file)
 			writer.writerow((title_column1, title_column2))
 
-			writer.writerow((wv_or_time_val, abs_or_tr_or_en_val))
+			writer.writerow((int(wv_or_time_val)/10, abs_or_tr_or_en_val))
 			writer.writerow(('####', '####'))
 			writer.writerow((' Gain : ', gain_set))
 			writer.writerow((' Light Source : ', light_source))
@@ -270,4 +273,10 @@ class DataProcessing:
 			writer.writerow(('####', '####'))
 			data_file.close()
 			os.chdir('..')
-			
+
+
+	#def data_conv_transm_mono(self, ABS_raw):
+	#	ABS_raw = float(ABS_raw)
+	#	self.ABS_corr = pow(10, -ABS_raw) * 100
+	#	self.ABS_corr = self.ABS_raw
+	#	return self.ABS_corr

@@ -20,7 +20,7 @@
 
 
 ### Libraries ##############################################################
-from sig_list import ENQ_SIGNAL, ACK_SIGNAL, EOT_SIGNAL
+from sig_list import ENQ_SIGNAL, ACK_SIGNAL, EOT_SIGNAL, ESC_SIGNAL
 from spectrum_range import SpectrumScan
 from baseline_corr import BaseCorr
 from time_scan import TimeScan
@@ -50,37 +50,119 @@ class SendData(ConnectPort, SpectrumScan, BaseCorr, TimeScan, Sipper160Param, Se
 		ConnectPort.__init__(self)
 		
 	def send_port(self, SIGNAL):
-			print("Interrogating machine...")
+			self.port.write(ESC_SIGNAL.encode('ascii'))
+			
+			print("Interrogating machine (ENQ)...")
 			self.port.write(ENQ_SIGNAL.encode('ascii'))
 			ENQ_request_response = b''
 			while ENQ_request_response == b'':
-				ENQ_request_response = self.port.read(1)
+				ENQ_request_response = self.port.read(1) 
+			
 			if ENQ_request_response == b'\x06':
-				print("Machine acknowledged !")
+				
+				print("Machine acknowledged (ACK) !")
 				self.port.write(SIGNAL.encode('ascii'))
-				print("Sending request : \n " + SIGNAL)
 				
 				SIGNAL_request_response = b''
 				while SIGNAL_request_response == b'':
 					SIGNAL_request_response = self.port.read(1)
-				if SIGNAL_request_response == b'\x06\x1b':
-					print("Parameter set.")
-				elif SIGNAL_request_response == b'\x06':	
-					print("Request accepted. Processing...")
+
+				if SIGNAL_request_response == b'\x06':	
+					print("Request accepted (ACK). Processing...")
+					
 					SIGNAL_processed = b''
 					while SIGNAL_processed == b'':
 						SIGNAL_processed = self.port.read(1)
-					print("Request processed ! Waiting EOT signal from the machine to end communication.")
-					if SIGNAL_processed == b'\x04':
-						self.port.write(ACK_SIGNAL.encode('ascii'))
-					else:
+						
+					if SIGNAL_processed in [b'\x1b', b'\x15']:
+						print("ERROR. Machine send ESC or NAK. Sending EOT.")
 						self.port.write(EOT_SIGNAL.encode('ascii'))
-						print("ERROR. Machine didn't end communication. Sending EOT.")
+					
+					elif SIGNAL_processed == b'\x04':
+						self.port.write(ACK_SIGNAL.encode('ascii'))
+						print("Request processed !")
+						
+					else:
+						pass
+					
+				elif SIGNAL_request_response == b'\x15':
+					print("ERROR. Machine refused the command (NAK).")
+					self.port.write(ESC_SIGNAL.encode('ascii'))
+				
+				elif SIGNAL_request_response == b'\x1b':
+					print("ERROR. Machine refused the command (ESC).")
+					self.port.write(ESC_SIGNAL.encode('ascii'))
+					
 				elif SIGNAL_request_response == b'\x06\x04':
 					 self.port.write(ACK_SIGNAL.encode('ascii'))
-					 print("Request processed ! EOT signal received, ending communication.")
+					 print("Request processed !")
+					 
 				else:
 					print("ERROR. Request refused !")
-					print(SIGNAL_request_response)
+					self.port.write(ESC_SIGNAL.encode('ascii'))
+					self.port.write(EOT_SIGNAL.encode('ascii'))
+		
 			else:
 				print("ERROR. Machine does not respond.")
+				self.port.write(ESC_SIGNAL.encode('ascii'))
+				
+				
+	def send_special(self, SIGNAL1, SIGNAL2, SIGNAL3):
+			
+			self.port.write(ESC_SIGNAL.encode('ascii'))
+			
+			print("Interrogating machine (ENQ)...")
+			self.port.write(ENQ_SIGNAL.encode('ascii'))
+			ENQ_request_response = b''
+			while ENQ_request_response == b'':
+				ENQ_request_response = self.port.read(1) 
+			
+			if ENQ_request_response == b'\x06':
+				
+				print("Machine acknowledged (ACK) !")
+				self.port.write(SIGNAL1.encode('ascii'))
+				self.port.write(SIGNAL2.encode('ascii'))
+				self.port.write(SIGNAL3.encode('ascii'))
+				
+				SIGNAL_request_response = b''
+				while SIGNAL_request_response == b'':
+					SIGNAL_request_response = self.port.read(1)
+
+				if SIGNAL_request_response == b'\x06':	
+					print("Request accepted (ACK). Processing...")
+					
+					SIGNAL_processed = b''
+					while SIGNAL_processed == b'':
+						SIGNAL_processed = self.port.read(1)
+						
+					if SIGNAL_processed in [b'\x1b', b'\x15']:
+						print("ERROR. Machine send ESC or NAK. Sending EOT.")
+						self.port.write(EOT_SIGNAL.encode('ascii'))
+					
+					elif SIGNAL_processed == b'\x04':
+						self.port.write(ACK_SIGNAL.encode('ascii'))
+						print("Request processed !")
+						
+					else:
+						pass
+					
+				elif SIGNAL_request_response == b'\x15':
+					print("ERROR. Machine refused the command (NAK).")
+					self.port.write(ESC_SIGNAL.encode('ascii'))
+				
+				elif SIGNAL_request_response == b'\x1b':
+					print("ERROR. Machine refused the command (ESC).")
+					self.port.write(ESC_SIGNAL.encode('ascii'))
+					
+				elif SIGNAL_request_response == b'\x06\x04':
+					 self.port.write(ACK_SIGNAL.encode('ascii'))
+					 print("Request processed !")
+					 
+				else:
+					print("ERROR. Request refused !")
+					self.port.write(ESC_SIGNAL.encode('ascii'))
+					self.port.write(EOT_SIGNAL.encode('ascii'))
+		
+			else:
+				print("ERROR. Machine does not respond.")
+				self.port.write(ESC_SIGNAL.encode('ascii'))				
