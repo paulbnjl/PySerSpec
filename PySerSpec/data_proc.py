@@ -216,7 +216,7 @@ class DataProcessing:
 			light = 'Custom lamp'
 		else:
 			pass
-		print("Please type an identifier (fist for corrected data csv, then raw data csv) : ")
+		print("Please type an identifier (first for raw data csv, then corrected data csv) : ")
 		sample_id = input()
 		filename = datetime.datetime.now().strftime("%d_%m_%Y-%H_%M_%S")
 		data_file = open(sample_id + '_' +name + '_' + filename + '.csv', 'w', newline='')
@@ -257,7 +257,7 @@ class DataProcessing:
 			else:
 				pass
 				
-			print("Please type an identifier (first for corrected data csv, then raw data csv) : ")
+			print("Please type an identifier (first for raw data csv, then corrected data csv) : ")
 			sample_id_mono = input()
 			filename = datetime.datetime.now().strftime("%d_%m_%Y-%H_%M_%S")
 			data_file = open(sample_id_mono + '_' + name + '_' + filename + '.csv', 'w', newline='')

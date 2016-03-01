@@ -91,7 +91,9 @@ while end_menu_princ != 1:
 			print("Parameter set. Going back to main menu ...")
 			break
 	elif user_choice == '2':
-		print ("################ LIGHT SOURCE ############################################")
+		print("################ LIGHT SOURCE ############################################")
+		print("Changing the lamp will only work while in energy mode ;")
+		print("Also, lamp shutdown automatically when not in its attributed wavelength range.")
 		end_menu_light = ''
 		while end_menu_light != '1':
 			LIGHT = SendData()
@@ -111,6 +113,7 @@ while end_menu_princ != 1:
 
 	elif user_choice == '3':
 		print ("################ GAIN ####################################################")
+		print("Changing the gain will only work for energy mode.")
 		end_menu_gain = ''
 		while end_menu_gain != '1':
 			GAIN = SendData()

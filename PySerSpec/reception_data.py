@@ -39,13 +39,15 @@ class DataReception(ConnectPort, AscPosition, CuvettePosition, DataProcessing):
 	def rec_data(self, SIGNAL):
 		self.port.write(ESC_SIGNAL.encode('ascii'))
 		
+		
 		print("Interrogating machine (ENQ)...")
 		self.port.write(ENQ_SIGNAL.encode('ascii'))
 		
 		ENQ_receive_response = b''
 		while ENQ_receive_response == b'':
 			ENQ_receive_response = self.port.read(1)
-		
+
+				
 		if ENQ_receive_response == b'\x06':		
 			print("Machine acknowledged (ACK) !")
 			self.port.write(SIGNAL.encode('ascii'))
@@ -86,6 +88,9 @@ class DataReception(ConnectPort, AscPosition, CuvettePosition, DataProcessing):
 							
 						self.port.write(ACK_SIGNAL.encode('ascii'))
 						self.port.write(ESC_SIGNAL.encode('ascii'))
+						self.port.write(EOT_SIGNAL.encode('ascii'))
+						print("All data received. Ending communication (EOT).")
+
 						
 					else:
 						print("ERROR. Message returned : " + machine_ENQ)
@@ -100,7 +105,21 @@ class DataReception(ConnectPort, AscPosition, CuvettePosition, DataProcessing):
 					self.port.write(EOT_SIGNAL.encode('ascii'))
 					exit()
 					break
-					
+				
+				elif DATA_request_response == b'\x1b':
+					print("ERROR. Machine refused the command (ESC).")
+					self.port.write(ESC_SIGNAL.encode('ascii'))
+					self.port.write(EOT_SIGNAL.encode('ascii'))
+					exit()
+					break
+						
+				elif DATA_request_response == b'\x04':
+					print("ERROR. Machine refused the command (EOT).")
+					self.port.write(ESC_SIGNAL.encode('ascii'))
+					self.port.write(EOT_SIGNAL.encode('ascii'))
+					exit()
+					break
+						
 				else:
 					print("ERROR. No return (ENQ) from the machine.")
 					self.port.write(ESC_SIGNAL.encode('ascii'))
