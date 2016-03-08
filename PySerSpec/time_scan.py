@@ -25,6 +25,7 @@ class TimeScan:
 		self.TIME_VAL = '1' # default 1
 		self.TIME_UNIT_VAL = '1' # default minutes
 		self.TIME_DATA_POINTS = ''
+		self.TIME_RANGE = '2' # 10-100s range means 1 value per second
 		
 	def get_TIME_UNIT_VAL(self):			
 		choice_unit = ["1 : Seconds", "2 : Minutes"]
@@ -39,9 +40,34 @@ class TimeScan:
 			self.TIME_UNIT_VAL = 0
 		elif TIME_UNIT_VAL_choice == '2':
 			self.TIME_UNIT_VAL = 1
+		else:
+			pass
 		return_choice = int(TIME_UNIT_VAL_choice) - int(1)
 		print("Time unit set to : " + choice_unit[int(return_choice)])
 		return self.TIME_UNIT_VAL
+	
+	def get_TIME_RANGE(self):
+		choice_range = ["1 : [1;10] seconds","2 : [11;100] seconds ","3 : [101;500] seconds","4 : [501;6500] seconds"]
+		real_choice_range = ['1', '2', '3', '4']
+		print("select time measurement range: \n")
+		for i in range(4):
+			print(choice_range[i])
+		TIME_RANGE_choice = ''
+		while TIME_RANGE_choice not in real_choice_range:
+			TIME_RANGE_choice = input()
+		if TIME_RANGE_choice == '1':
+			self.TIME_RANGE = 1
+		elif TIME_RANGE_choice == '2':
+			self.TIME_RANGE = 2
+		elif TIME_RANGE_choice == '3':
+			self.TIME_RANGE = 3
+		elif TIME_RANGE_choice == '4' :
+			self.TIME_RANGE = 4
+		else:
+			pass			
+		return_choice_range = int(TIME_RANGE_choice) - int(1)
+		print("Time range : " + choice_range[int(return_choice_range)])
+		return self.TIME_RANGE
 		
 	def get_TIME_VAL(self):
 		TIME_VAL_control = 0
@@ -51,8 +77,36 @@ class TimeScan:
 				TIME_VAL_input = input ('Enter time value (seconds) : \n')
 				if TIME_VAL_input.isnumeric() == True:
 					if 1 <= int(TIME_VAL_input) <= 6500:
-						self.TIME_VAL = TIME_VAL_input
-						TIME_VAL_control = 1
+						if self.TIME_RANGE == 1:
+							if 1 <= int(TIME_VAL_input) <= 10:
+								self.TIME_VAL = TIME_VAL_input
+								TIME_VAL_control = 1
+							else:
+								print("Incorrect value, please enter a value within the chosen range !")
+								TIME_VAL_control = 0
+						elif self.TIME_RANGE == 2:
+							if 10 < int(TIME_VAL_input) <= 100:
+								self.TIME_VAL = TIME_VAL_input
+								TIME_VAL_control = 1
+							else:
+								print("Incorrect value, please enter a value within the chosen range !")
+								TIME_VAL_control = 0	
+						elif self.TIME_RANGE == 3:
+							if 100 < int(TIME_VAL_input) <= 500:
+								self.TIME_VAL = TIME_VAL_input
+								TIME_VAL_control = 1
+							else:
+								print("Incorrect value, please enter a value within the chosen range !")
+								TIME_VAL_control = 0	
+						elif self.TIME_RANGE == 4:
+							if 500 < int(TIME_VAL_input) <= 6500:
+								self.TIME_VAL = TIME_VAL_input
+								TIME_VAL_control = 1
+							else:
+								print("Incorrect value, please enter a value within the chosen range !")
+								TIME_VAL_control = 0	
+						else:
+							pass
 					else:
 						print ("ERROR. Please enter a value greater or equal to 1 and lower or equal to 6500 seconds/108 minutes!")
 				else:
@@ -73,10 +127,15 @@ class TimeScan:
 	def get_TIME_POINTS(self):
 	
 		if self.TIME_UNIT_VAL == 0:
-			if 1 <= int(self.TIME_VAL) <= 2000: # unit=seconds
+			if 1 <= int(self.TIME_VAL) <= 10: # unit=seconds
+				self.TIME_DATA_POINTS = 10 * int(self.TIME_VAL)
+			elif  10 < int(self.TIME_VAL) <= 100:
 				self.TIME_DATA_POINTS = self.TIME_VAL
-			elif int(self.TIME_VAL) >= 2000:
-				self.TIME_DATA_POINTS = 2000
+			elif 100 < int(self.TIME_VAL) <= 500:
+				self.TIME_DATA_POINTS = 50
+			elif int(self.TIME_VAL) > 500:
+				self.TIME_DATA_POINTS = 10
+						
 		elif self.TIME_UNIT_VAL == 1:
 			if 1 <= int(self.TIME_VAL) <=108: # unit=minutes
 				self.TIME_DATA_POINTS = self.TIME_VAL

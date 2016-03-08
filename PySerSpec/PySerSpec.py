@@ -20,6 +20,7 @@
 
 ################# Files and librairies #####################################
 import serial
+# import numpy as np
 from send_data import SendData
 from reception_data import DataReception
 from connect import ConnectPort
@@ -59,8 +60,8 @@ mode_set = '1' # absorbance
 light_set = '2' # D2 lamp
 gain_set = '3' # gain set to 3 by default
 ############################################################################
-menu_choices = ["1 : Mode", "2 : Light source", "3 : Gain", "4 : Data accumulation time", "5 : Measurement (single value)", 
-"6 : Measurement (spectrum scan)", "7 : Scan over time", "8 : UNTESTED FUNCTIONS", "9 : Exit"]
+menu_choices = ["1 : Mode", "2 : Light source", "3 : Gain", "4 : Data accumulation time", "5 : Scan (single value)", 
+"6 : Scan (spectrum)", "7 : Scan (time)", "8 : UNTESTED FUNCTIONS", "9 : Exit"]
 end_menu_princ = ''
 while end_menu_princ != 1:
 	print("################ MAIN MENU ####################################")
@@ -284,6 +285,14 @@ while end_menu_princ != 1:
 					BASELINE_CORR.send_port(BASELINE_CORR.BASELINECORRECTION_SIGNAL)
 					BASELINE_CORR.close_port()
 					
+					#BASELINE_CORR = DataReception() #
+					#BASELINE_CORR.SIGNAL = ' '.join(['\x66', str(1), '\x00'])
+					#BASELINE_CORR.port.port = PORT_SET
+					#BASELINE_CORR.open_port()
+					#BASELINE_CORR.rec_data(BASELINE_CORR.SIGNAL)
+					#BASELINE_CORR.close_port()
+					
+					
 			elif spectrum_menu_user_choice == '2':
 				input()
 				SPECTRUM = SendData()
@@ -451,8 +460,10 @@ while end_menu_princ != 1:
 		TIMESCAN = SendData()
 		TIMESCAN.port.port = PORT_SET
 		TIMESCAN.get_TIME_UNIT_VAL()
+		TIMESCAN.get_TIME_RANGE()
 		TIMESCAN.get_TIME_VAL()
 		TIMESCAN.get_TIME_POINTS()
+		time_range = TIMESCAN.TIME_RANGE
 		time_val = TIMESCAN.TIME_VAL
 		time_unit_val = TIMESCAN.TIME_UNIT_VAL
 		time_points = TIMESCAN.TIME_DATA_POINTS
@@ -460,7 +471,6 @@ while end_menu_princ != 1:
 		TIMESCAN.open_port()
 		TIMESCAN.send_port(TIMESCAN.TIMESCAN_SIGNAL)
 		TIMESCAN.close_port()
-		data_points_time = 30
 		
 		TIMESCAN_REC = DataReception()
 		TIMESCAN_REC.SIGNAL = ' '.join(['\x66', str(time_points), '\x00'])
@@ -469,7 +479,24 @@ while end_menu_princ != 1:
 		TIMESCAN_REC.rec_data(TIMESCAN_REC.SIGNAL)
 		TIMESCAN_REC.close_port()
 
-		TIMESCAN_REC.data_time(TIMESCAN_REC.DATA_output)
+		if time_range == 1:
+			TIMESCAN_REC.data_time_range1(TIMESCAN_REC.DATA_output)
+		elif time_range == 2:
+			TIMESCAN_REC.data_time_range2(TIMESCAN_REC.DATA_output)
+		elif time_range == 3:
+			TIMESCAN_REC.data_time_range3(TIMESCAN_REC.DATA_output, time_val)
+		elif time_range == 4:
+			TIMESCAN_REC.data_time_range4(TIMESCAN_REC.DATA_output, time_val)
+		else:
+			pass
+			
+		# TIMESCAN_REC.ABS_raw_np_array = np.array([val for val in TIMESCAN_REC.ABS_raw])
+		# TIMESCAN_REC.ABS_corr_np_array = np.array([val for val in TIMESCAN_REC.ABS_corr])
+		# TIMESCAN_REC.TIME_np_array = np.array([val for val in TIMESCAN_REC.TIME])
+		# print(TIMESCAN_REC.ABS_raw_np_array)
+		# print(TIMESCAN_REC.ABS_corr_np_array)
+		# print(TIMESCAN_REC.TIME_np_array)
+		
 		if time_unit_val == 1:
 			if mode_set == '1':
 				print("Saving data...")
@@ -580,7 +607,7 @@ while end_menu_princ != 1:
 				while plot_resp not in plot_choice:
 					plot_resp = input()
 				if plot_resp == 'Y':
-					TIMESCAN_REC.data_plot('Time (seconds)', 'Transmittance',TIMESCAN_REC.TIME, TIMESCAN_REC.ABS_corr)
+					TIMESCAN_REC.data_plot('Time (seconds)', 'Transmittance', TIMESCAN_REC.TIME, TIMESCAN_REC.ABS_corr)
 				elif plot_resp == 'N':
 					pass
 				print("Plot raw data ? Y/N \n")

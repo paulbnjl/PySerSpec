@@ -24,19 +24,25 @@ class GainSp:
 		self.GAIN_VAL = '3'
 			
 	def get_GAIN_VAL(self):			
-			available_choices_gain = ["1", "2", "3 [default]", "4", "5", "6", "7 : Exit"]
+			available_choices_gain = ["1", "2", "3 [default]", "4", "5", "6", "7 : Main menu", "8 : Exit"]
 			print("Select gain factor (1 to 6) :  \n")
-			for i in range(7):
+			for i in range(8):
 				print(available_choices_gain[i])
+			gain_real_values = ["1","2","3","4","5","6","7","8"]
 			gain_choice_val = ''
-			while gain_choice_val not in available_choices_gain:
+			while gain_choice_val not in gain_real_values:
 				gain_choice_val = input()
 				if gain_choice_val in ['1','2','3','4','5','6']:
 					self.GAIN_VAL = gain_choice_val
 					print("Gain set to : " + available_choices_gain[int(gain_choice_val)-1])
 					return self.GAIN_VAL
 					
-				else:
+				elif gain_choice_val == '7':
+					pass
+					
+				elif gain_choice_val == '8':
 					print("Closing now. Goodbye !")
 					end_menu_gain = '1'
 					exit()
+				else:
+					pass

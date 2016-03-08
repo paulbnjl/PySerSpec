@@ -24,10 +24,10 @@ class DataAccSp:
 		self.DATA_ACC_VAL = 2
 		
 	def get_DATA_ACC_VAL(self):			
-			available_choices_data_acc = ["1 : 50 ms","2 : 100 ms [default]","3 : 200 ms","4 : Exit"]
-			real_choices_data_acc = ["1","2","3","4"]
+			available_choices_data_acc = ["1 : 50 ms","2 : 100 ms [default]","3 : 200 ms", "4 : Main menu", "5 : Exit"]
+			real_choices_data_acc = ["1","2","3","4", "5"]
 			print("Select data accumulation time : \n")
-			for i in range(4):
+			for i in range(5):
 				print(available_choices_data_acc[i])
 			data_acc_choice_val = ''
 			while data_acc_choice_val not in real_choices_data_acc:
@@ -39,8 +39,11 @@ class DataAccSp:
 					print("Accumulation time set to " + available_choices_data_acc[int(returnchoice)])
 					print("Please note that you will have to correct the baseline again after this.")
 					return self.DATA_ACC_VAL
-				
+
 				elif data_acc_choice_val == '4':
+					pass
+				
+				elif data_acc_choice_val == '5':
 					print("Closing now. Goodbye !")
 					end_menu_dat = '1'
 					exit()

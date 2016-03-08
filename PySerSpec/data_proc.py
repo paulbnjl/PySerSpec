@@ -82,7 +82,62 @@ class DataProcessing:
 				pass
 		return self.ABS_corr, self.ABS_raw, self.WV
 
-	def data_time(self, DATA_output):
+	def data_time_range1(self, DATA_output):
+		for val in DATA_output:
+			self.PROCESS_DATA.append(val.decode('utf-8'))
+		count = 0
+		for val in self.PROCESS_DATA:
+			self.PROCESS_DATA[count] = val.replace("\x00",'')
+			count += 1
+		count=0
+		for val in self.PROCESS_DATA:
+			self.PROCESS_DATA[count] = val.replace("b'",'')
+			count += 1
+		count=0
+		for val in self.PROCESS_DATA:
+			self.PROCESS_DATA[count] = val.replace("\x05",'')
+			count += 1
+		count=0
+		for val in self.PROCESS_DATA:
+			self.PROCESS_DATA[count] = val.replace("\x04",'')
+			count += 1
+		count=0
+		for val in self.PROCESS_DATA:
+			self.PROCESS_DATA[count] = val.replace("\x1b",'')
+			count += 1
+		count=0
+		for val in self.PROCESS_DATA:
+			self.PROCESS_DATA[count] = val.replace("'",'')
+			count += 1
+		count=0
+		for val in self.PROCESS_DATA:
+			self.PROCESS_DATA[count] = val.replace("\x2c",'')
+			count += 1
+		count=0
+		for val in self.PROCESS_DATA:
+			self.PROCESS_DATA[count] = val.replace("\x06",'')
+			count += 1
+
+		TIME_nested = [s.split('  ', 2)[:2] for s in self.PROCESS_DATA]
+		self.TIME = [val for sublist in TIME_nested for val in sublist if val != ""]
+		self.TIME = [int(float(x))*100 for x in self.TIME]
+		
+		timeval = 0
+		for val in self.TIME:
+			self.TIME[timeval] = timeval
+			timeval +=1
+		
+		ABS_nested = [s.split('  ', 2)[2:] for s in self.PROCESS_DATA]
+		self.ABS_raw = [val for sublist in ABS_nested for val in sublist if val != ""]
+		self.ABS_corr = [val for val in self.ABS_raw]
+		for i in range(len(self.ABS_corr)):
+			if '-' in self.ABS_corr[i]:
+				self.ABS_corr[i] = '0'
+			else:
+				pass
+		return self.ABS_raw, self.ABS_corr, self.TIME
+
+	def data_time_range2(self, DATA_output):
 			for val in DATA_output:
 				self.PROCESS_DATA.append(val.decode('utf-8'))
 			count = 0
@@ -121,6 +176,12 @@ class DataProcessing:
 			TIME_nested = [s.split('  ', 2)[:2] for s in self.PROCESS_DATA]
 			self.TIME = [val for sublist in TIME_nested for val in sublist if val != ""]
 			self.TIME = [int(float(x))*10 for x in self.TIME]
+			
+			timeval = 0
+			for val in self.TIME:
+				self.TIME[timeval] = timeval
+				timeval +=1
+			
 			ABS_nested = [s.split('  ', 2)[2:] for s in self.PROCESS_DATA]
 			self.ABS_raw = [val for sublist in ABS_nested for val in sublist if val != ""]
 			self.ABS_corr = [val for val in self.ABS_raw]
@@ -129,6 +190,139 @@ class DataProcessing:
 					self.ABS_corr[i] = '0'
 				else:
 					pass
+			return self.ABS_raw, self.ABS_corr, self.TIME
+
+	def data_time_range3(self, DATA_output, TIME_VAL):
+			for val in DATA_output:
+				self.PROCESS_DATA.append(val.decode('utf-8'))
+			count = 0
+			for val in self.PROCESS_DATA:
+				self.PROCESS_DATA[count] = val.replace("\x00",'')
+				count += 1
+			count=0
+			for val in self.PROCESS_DATA:
+				self.PROCESS_DATA[count] = val.replace("b'",'')
+				count += 1
+			count=0
+			for val in self.PROCESS_DATA:
+				self.PROCESS_DATA[count] = val.replace("\x05",'')
+				count += 1
+			count=0
+			for val in self.PROCESS_DATA:
+				self.PROCESS_DATA[count] = val.replace("\x04",'')
+				count += 1
+			count=0
+			for val in self.PROCESS_DATA:
+				self.PROCESS_DATA[count] = val.replace("\x1b",'')
+				count += 1
+			count=0
+			for val in self.PROCESS_DATA:
+				self.PROCESS_DATA[count] = val.replace("'",'')
+				count += 1
+			count=0
+			for val in self.PROCESS_DATA:
+				self.PROCESS_DATA[count] = val.replace("\x2c",'')
+				count += 1
+			count=0
+			for val in self.PROCESS_DATA:
+				self.PROCESS_DATA[count] = val.replace("\x06",'')
+				count += 1
+
+			TIME_nested = [s.split('  ', 2)[:2] for s in self.PROCESS_DATA]
+			
+			self.TIME.append(int(TIME_VAL)/50)
+			x = (int(TIME_VAL)/50)
+			while len(self.TIME) <= 49: 
+					self.TIME.append(x + (int(TIME_VAL)/50))
+					x += (int(TIME_VAL)/50)
+			
+			#self.TIME = [val for sublist in TIME_nested for val in sublist if val != ""]
+			#self.TIME = [int(float(x)) for x in self.TIME]
+			
+			#timeval = 0
+			#for val in self.TIME:
+			#	if self.TIME[timeval] != 0:
+			#		self.TIME[timeval] = timeval + (int(TIME_VAL)/50)
+			#		timeval += (int(TIME_val)/50)
+			#		print(timeval)
+			#	else:
+			#		self.TIME[timeval] = 0
+			
+			ABS_nested = [s.split('  ', 2)[2:] for s in self.PROCESS_DATA]
+			self.ABS_raw = [val for sublist in ABS_nested for val in sublist if val != ""]
+			self.ABS_corr = [val for val in self.ABS_raw]
+			
+			for i in range(len(self.ABS_corr)):
+				if '-' in self.ABS_corr[i]:
+					self.ABS_corr[i] = '0'
+				else:
+					pass
+			return self.ABS_raw, self.ABS_corr, self.TIME
+
+	def data_time_range4(self, DATA_output, TIME_VAL):
+			for val in DATA_output:
+				self.PROCESS_DATA.append(val.decode('utf-8'))
+			count = 0
+			for val in self.PROCESS_DATA:
+				self.PROCESS_DATA[count] = val.replace("\x00",'')
+				count += 1
+			count=0
+			for val in self.PROCESS_DATA:
+				self.PROCESS_DATA[count] = val.replace("b'",'')
+				count += 1
+			count=0
+			for val in self.PROCESS_DATA:
+				self.PROCESS_DATA[count] = val.replace("\x05",'')
+				count += 1
+			count=0
+			for val in self.PROCESS_DATA:
+				self.PROCESS_DATA[count] = val.replace("\x04",'')
+				count += 1
+			count=0
+			for val in self.PROCESS_DATA:
+				self.PROCESS_DATA[count] = val.replace("\x1b",'')
+				count += 1
+			count=0
+			for val in self.PROCESS_DATA:
+				self.PROCESS_DATA[count] = val.replace("'",'')
+				count += 1
+			count=0
+			for val in self.PROCESS_DATA:
+				self.PROCESS_DATA[count] = val.replace("\x2c",'')
+				count += 1
+			count=0
+			for val in self.PROCESS_DATA:
+				self.PROCESS_DATA[count] = val.replace("\x06",'')
+				count += 1
+
+			TIME_nested = [s.split('  ', 2)[:2] for s in self.PROCESS_DATA]
+			
+			self.TIME.append((int(TIME_VAL)/10))
+			x = (int(TIME_VAL)/10)
+			while len(self.TIME) <= 9: 
+					self.TIME.append(x + (int(TIME_VAL)/10))
+					x += (int(TIME_VAL)/10)
+			
+			#self.TIME = [val for sublist in TIME_nested for val in sublist if val != ""]
+			#self.TIME = [int(float(x))*10 for x in self.TIME]
+			
+			#timeval = 0
+			#for val in self.TIME:
+			#	if self.TIME[timeval] != 0:
+			#		self.TIME[timeval] = timeval + (int(TIME_VAL)/10)
+			#		timeval += (int(TIME_val)/10)
+			#	else:
+			#		self.TIME[timeval] = 0
+			
+			ABS_nested = [s.split('  ', 2)[2:] for s in self.PROCESS_DATA]
+			self.ABS_raw = [val for sublist in ABS_nested for val in sublist if val != ""]
+			self.ABS_corr = [val for val in self.ABS_raw]
+				
+			for i in range(len(self.ABS_corr)):
+				if '-' in self.ABS_corr[i]:
+					self.ABS_corr[i] = '0'
+				else:
+					pass		
 			return self.ABS_raw, self.ABS_corr, self.TIME
 
 	def data_value(self, DATA_output):

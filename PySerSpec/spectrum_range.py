@@ -59,7 +59,7 @@ class SpectrumScan():
 		
 	def get_SPEED_VAL(self):
 		if int(self.DIFF_VAL) <= int(100):
-			choice1=["1 : 0.1nm", "2 : 0.2nm", "3 : 0.5nm","4 : 1.0nm", "5 : 2,0nm" ]
+			choice1=["1 : 0.1nm", "2 : 0.2nm", "3 : 0.5nm","4 : 1.0nm", "5 : 2.0nm" ]
 			available_choices1 = ["1", "2", "3", "4", "5"]
 			print("Select the measuring step : \n")
 			for i in range(5):
@@ -93,7 +93,7 @@ class SpectrumScan():
 				self.MES_STEP = '20'
 								
 		elif int(100) < int(self.DIFF_VAL) <= int(200):
-			choice2=["1 : 0.2nm", "2 : 0.5nm","3 : 1,0nm","4 : 2,0nm"]
+			choice2=["1 : 0.2nm", "2 : 0.5nm","3 : 1.0nm","4 : 2.0nm"]
 			available_choices2 = ["1","2","3","4"]
 			print("Select the measuring step : \n")
 			for i in range(4):
@@ -122,7 +122,7 @@ class SpectrumScan():
 				self.MES_STEP = '20'
 						
 		elif  int(200) < int(self.DIFF_VAL) <= int(500):
-			choice3=["1 : 0.5nm", "2 : 1.0nm","3 : 2,0nm"]
+			choice3=["1 : 0.5nm", "2 : 1.0nm","3 : 2.0nm"]
 			available_choices3 = ["1","2","3"]
 			print("Select the measuring step : \n")
 			for i in range(3):
