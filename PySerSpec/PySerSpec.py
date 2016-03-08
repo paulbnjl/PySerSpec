@@ -235,7 +235,7 @@ while end_menu_princ != 1:
 					
 					print("Saving data...")
 					DATA_MONO.data_save_csv_mono('RAW data','Wavelength (nm)', 'Transmittance', wv_set, DATA_MONO.ABS_raw, gain_set, light_set, mode_set)
-					DATA_MONO.data_save_csv_mono('Corrected data','Wavelength (nm)', 'Transmissance', wv_set, DATA_MONO.ABS_corr, gain_set, light_set, mode_set)
+					DATA_MONO.data_save_csv_mono('Corrected data','Wavelength (nm)', 'Transmittance', wv_set, DATA_MONO.ABS_corr, gain_set, light_set, mode_set)
 					print("Data saved.")
 					
 				elif mode_set == '3':
@@ -376,7 +376,7 @@ while end_menu_princ != 1:
 				elif mode_set == '2':
 					print("Saving data...")
 					SPECTRUM2_REC.data_save_csv('RAW_data','Wavelength (nm)', 'Transmittance', SPECTRUM2_REC.WV, SPECTRUM2_REC.ABS_raw, gain_set, light_set, mode_set)
-					SPECTRUM2_REC.data_save_csv('Corrected_data','Wavelength (nm)', 'Transmissance', SPECTRUM2_REC.WV, SPECTRUM2_REC.ABS_corr, gain_set, light_set, mode_set)
+					SPECTRUM2_REC.data_save_csv('Corrected_data','Wavelength (nm)', 'Transmittance', SPECTRUM2_REC.WV, SPECTRUM2_REC.ABS_corr, gain_set, light_set, mode_set)
 					print("Data saved.")
 					plot_choice = ['Y', 'N']
 					print("Plot data ? Y/N \n")
@@ -525,7 +525,7 @@ while end_menu_princ != 1:
 			elif mode_set == '2':
 				print("Saving data...")
 				TIMESCAN_REC.data_save_csv('RAW data','Time (minutes)', 'Transmittance', TIMESCAN_REC.TIME, TIMESCAN_REC.ABS_raw, gain_set, light_set, mode_set)
-				TIMESCAN_REC.data_save_csv('Corrected data','Time (minutes)', 'Transmissance', TIMESCAN_REC.TIME, TIMESCAN_REC.ABS_corr, gain_set, light_set, mode_set)
+				TIMESCAN_REC.data_save_csv('Corrected data','Time (minutes)', 'Transmittance', TIMESCAN_REC.TIME, TIMESCAN_REC.ABS_corr, gain_set, light_set, mode_set)
 				print("Data saved.")
 				
 				plot_choice = ['Y', 'N']
@@ -598,7 +598,7 @@ while end_menu_princ != 1:
 			elif mode_set == '2':
 				print("Saving data...")
 				TIMESCAN_REC.data_save_csv('RAW data','Time (seconds)', 'Transmittance', TIMESCAN_REC.TIME*10, TIMESCAN_REC.ABS_raw, gain_set, light_set, mode_set)
-				TIMESCAN_REC.data_save_csv('Corrected data','Time (seconds)', 'Transmissance', TIMESCAN_REC.TIME*10, TIMESCAN_REC.ABS_corr, gain_set, light_set, mode_set)
+				TIMESCAN_REC.data_save_csv('Corrected data','Time (seconds)', 'Transmittance', TIMESCAN_REC.TIME*10, TIMESCAN_REC.ABS_corr, gain_set, light_set, mode_set)
 				print("Data saved.")
 				
 				plot_choice = ['Y', 'N']
