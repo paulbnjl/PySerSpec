@@ -23,8 +23,6 @@ import matplotlib.pyplot as plot
 import csv
 import os
 import datetime
-# import math
-# from decimal import Decimal
 
 class DataProcessing:
 	def __init__(self):
@@ -228,25 +226,13 @@ class DataProcessing:
 				self.PROCESS_DATA[count] = val.replace("\x06",'')
 				count += 1
 
-			TIME_nested = [s.split('  ', 2)[:2] for s in self.PROCESS_DATA]
+			#TIME_nested = [s.split('  ', 2)[:2] for s in self.PROCESS_DATA]
 			
 			self.TIME.append(int(TIME_VAL)/50)
 			x = (int(TIME_VAL)/50)
 			while len(self.TIME) <= 49: 
 					self.TIME.append(x + (int(TIME_VAL)/50))
 					x += (int(TIME_VAL)/50)
-			
-			#self.TIME = [val for sublist in TIME_nested for val in sublist if val != ""]
-			#self.TIME = [int(float(x)) for x in self.TIME]
-			
-			#timeval = 0
-			#for val in self.TIME:
-			#	if self.TIME[timeval] != 0:
-			#		self.TIME[timeval] = timeval + (int(TIME_VAL)/50)
-			#		timeval += (int(TIME_val)/50)
-			#		print(timeval)
-			#	else:
-			#		self.TIME[timeval] = 0
 			
 			ABS_nested = [s.split('  ', 2)[2:] for s in self.PROCESS_DATA]
 			self.ABS_raw = [val for sublist in ABS_nested for val in sublist if val != ""]
@@ -295,24 +281,13 @@ class DataProcessing:
 				self.PROCESS_DATA[count] = val.replace("\x06",'')
 				count += 1
 
-			TIME_nested = [s.split('  ', 2)[:2] for s in self.PROCESS_DATA]
+			#TIME_nested = [s.split('  ', 2)[:2] for s in self.PROCESS_DATA]
 			
 			self.TIME.append((int(TIME_VAL)/10))
 			x = (int(TIME_VAL)/10)
 			while len(self.TIME) <= 9: 
 					self.TIME.append(x + (int(TIME_VAL)/10))
 					x += (int(TIME_VAL)/10)
-			
-			#self.TIME = [val for sublist in TIME_nested for val in sublist if val != ""]
-			#self.TIME = [int(float(x))*10 for x in self.TIME]
-			
-			#timeval = 0
-			#for val in self.TIME:
-			#	if self.TIME[timeval] != 0:
-			#		self.TIME[timeval] = timeval + (int(TIME_VAL)/10)
-			#		timeval += (int(TIME_val)/10)
-			#	else:
-			#		self.TIME[timeval] = 0
 			
 			ABS_nested = [s.split('  ', 2)[2:] for s in self.PROCESS_DATA]
 			self.ABS_raw = [val for sublist in ABS_nested for val in sublist if val != ""]
@@ -467,10 +442,3 @@ class DataProcessing:
 			writer.writerow(('####', '####'))
 			data_file.close()
 			os.chdir('..')
-
-
-	#def data_conv_transm_mono(self, ABS_raw):
-	#	ABS_raw = float(ABS_raw)
-	#	self.ABS_corr = pow(10, -ABS_raw) * 100
-	#	self.ABS_corr = self.ABS_raw
-	#	return self.ABS_corr

@@ -22,10 +22,10 @@ class TimeScan:
 
 	def __init__(self):
 		""" Default settings : read for one minute """
-		self.TIME_VAL = '1' # default 1
-		self.TIME_UNIT_VAL = '1' # default minutes
+		self.TIME_VAL = '1'
+		self.TIME_UNIT_VAL = '1'
 		self.TIME_DATA_POINTS = ''
-		self.TIME_RANGE = '2' # 10-100s range means 1 value per second
+		self.TIME_RANGE = '2'
 		
 	def get_TIME_UNIT_VAL(self):			
 		choice_unit = ["1 : Seconds", "2 : Minutes"]
@@ -127,7 +127,7 @@ class TimeScan:
 	def get_TIME_POINTS(self):
 	
 		if self.TIME_UNIT_VAL == 0:
-			if 1 <= int(self.TIME_VAL) <= 10: # unit=seconds
+			if 1 <= int(self.TIME_VAL) <= 10:
 				self.TIME_DATA_POINTS = 10 * int(self.TIME_VAL)
 			elif  10 < int(self.TIME_VAL) <= 100:
 				self.TIME_DATA_POINTS = self.TIME_VAL
@@ -137,7 +137,7 @@ class TimeScan:
 				self.TIME_DATA_POINTS = 10
 						
 		elif self.TIME_UNIT_VAL == 1:
-			if 1 <= int(self.TIME_VAL) <=108: # unit=minutes
+			if 1 <= int(self.TIME_VAL) <=108:
 				self.TIME_DATA_POINTS = self.TIME_VAL
 			elif int(self.TIME_VAL) >= 108:
 				self.TIME_DATA_POINTS = 108

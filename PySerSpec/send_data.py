@@ -32,6 +32,7 @@ from get_wv import WaveLengthGet
 from get_data_acc_time import DataAccSp
 from get_mes_mode import MesMode
 from connect import ConnectPort
+import time
 ###########################################################################
 
 
@@ -51,16 +52,24 @@ class SendData(ConnectPort, SpectrumScan, BaseCorr, TimeScan, Sipper160Param, Se
 		
 	def send_port(self, SIGNAL):
 		
-			self.port.write(ESC_SIGNAL.encode('ascii'))
-			
+			time.sleep(2)
 			
 			print("Interrogating machine (ENQ)...")
 			self.port.write(ENQ_SIGNAL.encode('ascii'))
+			
 			ENQ_request_response = b''
 			while ENQ_request_response == b'':
-				ENQ_request_response = self.port.read(1) 
-				#print(ENQ_request_response) #
-				
+				ENQ_request_response = self.port.read(1)
+			
+			if ENQ_request_response == b'\x15':
+				print("Machine returned NAK ; sending ENQ again.")
+				self.port.write(ENQ_SIGNAL.encode('ascii'))
+				ENQ_request_response = b''
+				while ENQ_request_response == b'':
+					ENQ_request_response = self.port.read(1)
+			else:
+				pass
+			time.sleep(1)	
 			if ENQ_request_response == b'\x06':
 				
 				print("Machine acknowledged (ACK) !")
@@ -69,7 +78,6 @@ class SendData(ConnectPort, SpectrumScan, BaseCorr, TimeScan, Sipper160Param, Se
 				SIGNAL_request_response = b''
 				while SIGNAL_request_response == b'':
 					SIGNAL_request_response = self.port.read(1)
-					#print(SIGNAL_request_response) #
 
 				if SIGNAL_request_response == b'\x06':	
 					print("Request accepted (ACK). Processing...")
@@ -77,7 +85,6 @@ class SendData(ConnectPort, SpectrumScan, BaseCorr, TimeScan, Sipper160Param, Se
 					SIGNAL_processed = b''
 					while SIGNAL_processed == b'':
 						SIGNAL_processed = self.port.read(1)
-						#print(SIGNAL_processed) #
 						
 					if SIGNAL_processed in [b'\x1b', b'\x15']:
 						print("ERROR. Machine send ESC or NAK. Sending EOT.")
@@ -89,7 +96,6 @@ class SendData(ConnectPort, SpectrumScan, BaseCorr, TimeScan, Sipper160Param, Se
 						print("Request processed !")
 						
 					else:
-						#print(SIGNAL_processed)
 						pass
 					
 				elif SIGNAL_request_response == b'\x15':
@@ -107,7 +113,7 @@ class SendData(ConnectPort, SpectrumScan, BaseCorr, TimeScan, Sipper160Param, Se
 					
 				elif SIGNAL_request_response == b'\x06\x04':
 					 self.port.write(ACK_SIGNAL.encode('ascii'))
-					 print("Request processed !")
+					 print("Request processed ! (*)")
 					 
 				else:
 					print("ERROR. Request refused !")
@@ -123,16 +129,24 @@ class SendData(ConnectPort, SpectrumScan, BaseCorr, TimeScan, Sipper160Param, Se
 				
 	def send_special(self, SIGNAL1, SIGNAL2, SIGNAL3):
 			
-			self.port.write(ESC_SIGNAL.encode('ascii'))
-			
+			time.sleep(2)
 			
 			print("Interrogating machine (ENQ)...")
 			self.port.write(ENQ_SIGNAL.encode('ascii'))
+			
 			ENQ_request_response = b''
 			while ENQ_request_response == b'':
-				ENQ_request_response = self.port.read(1) 
-				#print(ENQ_request_response) #
-				
+				ENQ_request_response = self.port.read(1)
+			
+			if ENQ_request_response == b'\x15':
+				print("Machine returned NAK ; sending ENQ again.")
+				self.port.write(ENQ_SIGNAL.encode('ascii'))
+				ENQ_request_response = b''
+				while ENQ_request_response == b'':
+					ENQ_request_response = self.port.read(1)
+			else:
+				pass
+			time.sleep(1)	
 			if ENQ_request_response == b'\x06':
 				
 				print("Machine acknowledged (ACK) !")
@@ -143,7 +157,6 @@ class SendData(ConnectPort, SpectrumScan, BaseCorr, TimeScan, Sipper160Param, Se
 				SIGNAL_request_response = b''
 				while SIGNAL_request_response == b'':
 					SIGNAL_request_response = self.port.read(1)
-					#print(SIGNAL_request_response) #
 					
 				if SIGNAL_request_response == b'\x06':	
 					print("Request accepted (ACK). Processing...")
@@ -151,7 +164,6 @@ class SendData(ConnectPort, SpectrumScan, BaseCorr, TimeScan, Sipper160Param, Se
 					SIGNAL_processed = b''
 					while SIGNAL_processed == b'':
 						SIGNAL_processed = self.port.read(1)
-						#print(SIGNAL_processed) #
 						
 					if SIGNAL_processed in [b'\x1b', b'\x15']:
 						print("ERROR. Machine send ESC or NAK. Sending EOT.")
@@ -168,7 +180,6 @@ class SendData(ConnectPort, SpectrumScan, BaseCorr, TimeScan, Sipper160Param, Se
 
 						
 					else:
-						#print(SIGNAL_processed)
 						pass
 					
 				elif SIGNAL_request_response == b'\x15':
@@ -185,7 +196,7 @@ class SendData(ConnectPort, SpectrumScan, BaseCorr, TimeScan, Sipper160Param, Se
 					
 				elif SIGNAL_request_response == b'\x06\x04':
 					 self.port.write(ACK_SIGNAL.encode('ascii'))
-					 print("Request processed !")
+					 print("Request processed ! (*)")
 					 self.port.write(ESC_SIGNAL.encode('ascii'))
 					 self.port.write(EOT_SIGNAL.encode('ascii'))
 

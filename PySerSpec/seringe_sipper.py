@@ -82,7 +82,7 @@ class SeringeSipperParam:
 						print ("Type a value between 0 and 10 mL : ")
 						SIPPERSERINGE_CAPACITY_input = input("Value : ")
 						
-				self.SIPPERSERINGE_CAPACITY = SIPPERSERINGE_CAPACITY_input * 100 # because for some reason, value range is between 0 and 1000 with 1=0,01mL
+				self.SIPPERSERINGE_CAPACITY = SIPPERSERINGE_CAPACITY_input * 100
 				SIPPERSERINGE_PARAM_CONTROL = 1
 				return self.SIPPERSERINGE_MODE, self.SIPPERSERINGE_SPEED, self.SIPPERSERINGE_CAPACITY
 				

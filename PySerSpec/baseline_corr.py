@@ -21,9 +21,9 @@
 class BaseCorr:
 	def __init__(self):
 		
-		self.BASE_CORR_MAX_VAL = 11000 # default max value
-		self.BASE_CORR_MIN_VAL = 1900 # default min value
-		self.DIFF_VAL_BASECORR = 910 # default measured range (n-m)
+		self.BASE_CORR_MAX_VAL = 11000
+		self.BASE_CORR_MIN_VAL = 1900
+		self.DIFF_VAL_BASECORR = 910
 		
 	def get_BASE_CORR_MAX_VAL(self):
 		BASE_CORR_MAX_VAL_control = 0

@@ -20,7 +20,6 @@
 
 ################# Files and librairies #####################################
 import serial
-# import numpy as np
 from send_data import SendData
 from reception_data import DataReception
 from connect import ConnectPort
@@ -228,9 +227,7 @@ while end_menu_princ != 1:
 					DATA_MONO.data_save_csv_mono('Corrected data','Wavelength (nm)', 'Absorbance', wv_set, DATA_MONO.ABS_corr, gain_set, light_set, mode_set)
 					print("Data saved.")
 					
-				elif mode_set == '2':
-					#DATA_MONO.data_conv_transm_mono(DATA_MONO.ABS_raw)
-					
+				elif mode_set == '2':					
 					print("Transmittance at " + str(wv_set/10) + " nm : " + str(DATA_MONO.ABS_corr))
 					
 					print("Saving data...")
@@ -283,15 +280,7 @@ while end_menu_princ != 1:
 					BASELINE_CORR.port.port = PORT_SET
 					BASELINE_CORR.open_port()
 					BASELINE_CORR.send_port(BASELINE_CORR.BASELINECORRECTION_SIGNAL)
-					BASELINE_CORR.close_port()
-					
-					#BASELINE_CORR = DataReception() #
-					#BASELINE_CORR.SIGNAL = ' '.join(['\x66', str(1), '\x00'])
-					#BASELINE_CORR.port.port = PORT_SET
-					#BASELINE_CORR.open_port()
-					#BASELINE_CORR.rec_data(BASELINE_CORR.SIGNAL)
-					#BASELINE_CORR.close_port()
-					
+					BASELINE_CORR.close_port()					
 					
 			elif spectrum_menu_user_choice == '2':
 				input()
@@ -489,13 +478,6 @@ while end_menu_princ != 1:
 			TIMESCAN_REC.data_time_range4(TIMESCAN_REC.DATA_output, time_val)
 		else:
 			pass
-			
-		# TIMESCAN_REC.ABS_raw_np_array = np.array([val for val in TIMESCAN_REC.ABS_raw])
-		# TIMESCAN_REC.ABS_corr_np_array = np.array([val for val in TIMESCAN_REC.ABS_corr])
-		# TIMESCAN_REC.TIME_np_array = np.array([val for val in TIMESCAN_REC.TIME])
-		# print(TIMESCAN_REC.ABS_raw_np_array)
-		# print(TIMESCAN_REC.ABS_corr_np_array)
-		# print(TIMESCAN_REC.TIME_np_array)
 		
 		if time_unit_val == 1:
 			if mode_set == '1':

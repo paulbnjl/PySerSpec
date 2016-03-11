@@ -21,7 +21,7 @@
 class WaveLengthGet:
 	def __init__(self):
 		
-		self.WV_VAL = 5500 # default wavelength value for the D2 lamp
+		self.WV_VAL = 5500
 		
 	def get_WV_VAL(self):
 		WV_VAL_control = 0

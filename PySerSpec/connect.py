@@ -38,7 +38,7 @@ class ConnectPort():
 		self.port.dsrdtr = False
 		self.port.timeout = 0.1
 		self.port.write_timeout = 0.1
-		self.port.rts = True # don't ask me why, it won't work without it
+		self.port.rts = True
 		self.port.dtr = True
 		
 	def get_port(self):

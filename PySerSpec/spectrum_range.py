@@ -22,12 +22,12 @@
 class SpectrumScan():
 	def __init__(self):
 
-		self.SP_MAX_VAL = 11000 # default max value
-		self.SP_MIN_VAL = 1900 # default min value
-		self.SPEED_VAL = 1 # default wavelength scan speed
-		self.DIFF_VAL = 910 # default difference
-		self.MES_STEP = 1 # measurment step, that depend of both the speed and the wavelength difference
-		self.DATA_POINTS = 910 # number of measurments points, equal to DIFF_VAL * MES_STEP and =< 2000
+		self.SP_MAX_VAL = 11000
+		self.SP_MIN_VAL = 1900
+		self.SPEED_VAL = 1
+		self.DIFF_VAL = 910
+		self.MES_STEP = 1
+		self.DATA_POINTS = 910
 			
 	def get_SP_MAX_VAL(self):
 		SP_MAX_VAL_CONTROL = 0
@@ -65,10 +65,10 @@ class SpectrumScan():
 			for i in range(5):
 				print(choice1[i])
 			choice_val1 = ''
-			while choice_val1 not in available_choices1: # Note : this is really, really badly documented ! Correct value table is p63 of the french doc, not in the "computer control" part...
+			while choice_val1 not in available_choices1:
 				choice_val1 = input()
 			if choice_val1 == '1':
-				print("Measuring step : 0.1 nm") # will in fact return values with a 0,2nm step, as it seems the doc is generic and this machine can't reach 0,1nm...
+				print("Measuring step : 0.1 nm")
 				self.SPEED_VAL = '5'
 				self.MES_STEP = '10'
 				
