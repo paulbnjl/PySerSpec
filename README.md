@@ -1,6 +1,10 @@
 # PySerSpec
 Simple python software to remotely pilot a Shimadzu UVmini-1240 spectrophotometer, linked to a computer using a serial RS232 cable.
 
+Tested on :
+  x GNU/linux Ubuntu 15.10 x86_64
+  x Windows XP x86
+
 It allows you to control it while in "PC control mode" (F4), and supports all parameters mentionned in the official documentation :
 
 Gain/light/wavelength/mode/data accumulation time settings, temporal scan, spectrum scan, punctual measurement.
