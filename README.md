@@ -3,6 +3,7 @@ Simple python software to remotely pilot a Shimadzu UVmini-1240 spectrophotomete
 
 Tested on :
   x GNU/linux Ubuntu 15.10 x86_64
+  
   x Windows XP x86
 
 It allows you to control it while in "PC control mode" (F4), and supports all parameters mentionned in the official documentation :
@@ -23,6 +24,8 @@ In order to use it, it is required to have installed :
   x Pyserial : https://pythonhosted.org/pyserial/
   
   x Matplotlib : http://matplotlib.org/
+  
+  And all the relevant dependencies for these libraries : pytz, cycler, pyparsing, numpy, python-dateutil, six, cycler.
   
   To use it, assuming that you installed all the required dependencies, you just have to run the PySerSpec.py file.
   For instance, on GNU/Linux : python3.4 PySerSpec.py
