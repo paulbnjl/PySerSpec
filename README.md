@@ -2,6 +2,7 @@
 Simple python software to remotely pilot a Shimadzu UVmini-1240 spectrophotometer, linked to a computer using a serial RS232 cable.
 
 Tested on :
+
   x GNU/linux Ubuntu 15.10 x86_64
   
   x Windows XP x86
