@@ -170,11 +170,10 @@ class DataProcessing:
 			for val in self.PROCESS_DATA:
 				self.PROCESS_DATA[count] = val.replace("\x06",'')
 				count += 1
-
 			TIME_nested = [s.split('  ', 2)[:2] for s in self.PROCESS_DATA]
 			self.TIME = [val for sublist in TIME_nested for val in sublist if val != ""]
 			self.TIME = [int(float(x))*10 for x in self.TIME]
-			
+			print(self.TIME) #
 			timeval = 0
 			for val in self.TIME:
 				self.TIME[timeval] = timeval

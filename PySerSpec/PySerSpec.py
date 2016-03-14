@@ -41,6 +41,7 @@ while True:
 		CONNECTEDPORT.get_port()
 		CONNECTEDPORT.open_port()
 		PORT_SET = CONNECTEDPORT.port.port
+		CONNECTEDPORT.close_port()
 		print("Selected port seems to be OK !")
 		break
 	except serial.SerialException as e2: # wrong port = exception error code 2
@@ -449,10 +450,15 @@ while end_menu_princ != 1:
 		TIMESCAN = SendData()
 		TIMESCAN.port.port = PORT_SET
 		TIMESCAN.get_TIME_UNIT_VAL()
-		TIMESCAN.get_TIME_RANGE()
+		if TIMESCAN.TIME_UNIT_VAL == 0:
+			TIMESCAN.get_TIME_RANGE()
+			time_range = TIMESCAN.TIME_RANGE
+		else:
+			time_range = 2
+			pass
+		
 		TIMESCAN.get_TIME_VAL()
 		TIMESCAN.get_TIME_POINTS()
-		time_range = TIMESCAN.TIME_RANGE
 		time_val = TIMESCAN.TIME_VAL
 		time_unit_val = TIMESCAN.TIME_UNIT_VAL
 		time_points = TIMESCAN.TIME_DATA_POINTS
@@ -467,7 +473,6 @@ while end_menu_princ != 1:
 		TIMESCAN_REC.open_port()
 		TIMESCAN_REC.rec_data(TIMESCAN_REC.SIGNAL)
 		TIMESCAN_REC.close_port()
-
 		if time_range == 1:
 			TIMESCAN_REC.data_time_range1(TIMESCAN_REC.DATA_output)
 		elif time_range == 2:
@@ -485,7 +490,6 @@ while end_menu_princ != 1:
 				TIMESCAN_REC.data_save_csv('RAW data','Time (minutes)', 'Absorbance', TIMESCAN_REC.TIME, TIMESCAN_REC.ABS_raw, gain_set, light_set, mode_set)
 				TIMESCAN_REC.data_save_csv('Corrected data','Time (minutes)', 'Absorbance', TIMESCAN_REC.TIME, TIMESCAN_REC.ABS_corr, gain_set, light_set, mode_set)
 				print("Data saved.")
-				
 				plot_choice = ['Y', 'N']
 				print("Plot corrected data ? Y/N \n")
 				plot_resp = ''
@@ -500,7 +504,7 @@ while end_menu_princ != 1:
 				while plot_resp not in plot_choice:
 					plot_resp = input()
 				if plot_resp == 'Y':
-					TIMESCAN_REC.data_plot('Time (minutes)', 'Transmittance',TIMESCAN_REC.TIME, TIMESCAN_REC.ABS_raw)
+					TIMESCAN_REC.data_plot('Time (minutes)', 'Absorbance',TIMESCAN_REC.TIME, TIMESCAN_REC.ABS_raw)
 				elif plot_resp == 'N':
 					pass
 					
